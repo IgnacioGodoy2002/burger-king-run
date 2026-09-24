@@ -3,8 +3,8 @@ import * as T from './three.module.js';
 import {GLTFLoader} from './vendor/GLTFLoader.js';
 export class Runner extends T.Group{
  constructor({loadAssets=true}={}){super();this.avatar=new T.Group();this.add(this.avatar);this.actions={};this.skinned=[];this.bounds=new T.Box3();this.partBounds=new T.Box3();this.lastTime=null;this.runTime=0;this.deathStart=0;this.previousMode='menu';this.loadError=null;this.lookTarget=null;this.reactionAge=10;this.bones={};this.gestureBase=new Map();
- this.ready=loadAssets?new GLTFLoader().loadAsync('assets/models/burger-king-runner.glb').then(g=>{this.install(g);return true;}).catch(e=>{this.loadError=e;console.error('Character asset could not load',e);return false;}):Promise.resolve(false);}
- install(gltf){this.avatar.add(gltf.scene);this.model=gltf.scene;gltf.scene.traverse(o=>{if(o.isBone)this.bones[o.name]=o;if(o.isMesh){// Backpack color is authored directly into the packed Blender material.
+ this.ready=loadAssets?new GLTFLoader().loadAsync('assets/models/burger-king-runner.glb?v=royal-mascot-1').then(g=>{this.install(g);return true;}).catch(e=>{this.loadError=e;console.error('Character asset could not load',e);return false;}):Promise.resolve(false);}
+ install(gltf){this.avatar.add(gltf.scene);this.model=gltf.scene;gltf.scene.traverse(o=>{if(o.isBone)this.bones[o.name]=o;if(o.isMesh){// Royal costume and crown are skinned in the packed Blender asset.
 o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;if(o.isSkinnedMesh)this.skinned.push(o);}});this.mixer=new T.AnimationMixer(gltf.scene);
  for(const clip of gltf.animations){const action=this.mixer.clipAction(clip);action.setLoop(T.LoopOnce,1);action.clampWhenFinished=true;action.play();action.paused=true;action.setEffectiveWeight(0);this.actions[clip.name]={action,duration:clip.duration,weight:0};}
  for(const name of ['Idle','Run','Jump','Roll','Stumble','Deliver','Celebrate'])if(!this.actions[name])throw Error('Missing character animation: '+name);this.actions.Idle.weight=1;}
