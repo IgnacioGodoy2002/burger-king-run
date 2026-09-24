@@ -3,7 +3,7 @@ import {FinaleTransition} from './finale-transition.js';
 import {grantShield,resolveHazards,tickTimedPowers} from './shield.js?v=shield-timer-1';
 import {AssemblyUI} from './assembly-ui.js';
 import {CollectionProgress} from './collection-progress.js';
-import {runSpeed} from './difficulty.js';import {View} from './render.js?v=shield-obstacles-1';import {World} from './world.js?v=shield-obstacles-1';import {Input} from './input.js';import {PlayerPhysics} from './physics.js';import {AudioEngine} from './audio.js';import {recipe,LABELS} from './ingredients.js';
+import {runSpeed} from './difficulty.js';import {View} from './render.js?v=menu-walk-3';import {World} from './world.js?v=shield-obstacles-1';import {Input} from './input.js';import {PlayerPhysics} from './physics.js';import {AudioEngine} from './audio.js';import {recipe,LABELS} from './ingredients.js';
 const $=id=>document.getElementById(id);let view;try{view=new View($('game'))}catch(e){$('error').hidden=false;throw e}const world=new World(view.scene),p=new PlayerPhysics(),audio=new AudioEngine();let mode='menu',variant=1,steps=recipe(1),stage=0,distance=0,coins=0,time=0,speed=16,powers={},invincible=0,session=null,toastTimer,changeTimer,code=null,saving=false;
 const finale=new FinaleTransition();
 const progress=new CollectionProgress(1),assembly=new AssemblyUI(view.icons);let pausedFrom='run',arrivalHudHidden=false,victoryCue=false;
@@ -24,7 +24,7 @@ function showResult(){mode='complete';$('arrivalCaption').hidden=true;$('dialogT
 
 $('redeem').onclick=async()=>{if(!code){await saveReward();return}$('redeem').disabled=true;try{const result=await api('redeem');$('rewardStatus').textContent=result.alreadyRedeemed?'Este código ya se había canjeado.':'¡Canje de prueba registrado! Ya aparece en las métricas.';$('redeem').textContent='CANJE REGISTRADO'}catch(e){$('rewardStatus').textContent=e.message;$('redeem').disabled=false}};
 $('start').onclick=start;$('resume').onclick=()=>mode==='pause'?pause():start();$('pause').onclick=pause;$('sound').onclick=()=>{const enabled=audio.toggle();$('soundState').textContent=enabled?'ON':'OFF';$('sound').setAttribute('aria-label',enabled?'Silenciar':'Activar sonido');if(enabled&&mode==='run')audio.music(true)};
-$('home').onclick=()=>{if(saving)return;mode='menu';p.reset();world.reset();view.arrival.reset();finale.reset();$('finaleFlash').hidden=true;view.player.resetPresentation();assembly.reset(variant,steps.length);$('assembly').hidden=true;$('arrivalCaption').hidden=true;powers={};$('menu').hidden=false;$('dialog').hidden=true;$('hud').hidden=true;$('progress').hidden=true;$('change').hidden=true;document.body.classList.remove('playing');audio.music(false)};
+$('home').onclick=()=>{if(saving)return;mode='menu';time=0;p.reset();world.reset();view.arrival.reset();finale.reset();$('finaleFlash').hidden=true;view.player.resetPresentation();assembly.reset(variant,steps.length);$('assembly').hidden=true;$('arrivalCaption').hidden=true;powers={};$('menu').hidden=false;$('dialog').hidden=true;$('hud').hidden=true;$('progress').hidden=true;$('change').hidden=true;document.body.classList.remove('playing');audio.music(false)};
 document.querySelectorAll('[data-variant]').forEach(btn=>btn.onclick=()=>{if(saving)return;variant=Number(btn.dataset.variant);document.querySelectorAll('[data-variant]').forEach(b=>{const selected=b===btn;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',String(selected))});makeTube()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&(mode==='run'||mode==='arrival'||mode==='transition'))pause()});window.addEventListener('blur',()=>{if(mode==='run'||mode==='arrival'||mode==='transition')pause()});makeTube();
 function simulate(dt){
@@ -68,7 +68,7 @@ function frame(now){
   const before=distance;let remaining=elapsed;
   while(remaining>1e-8&&mode==='run'){const dt=Math.min(remaining,1/120);simulate(dt);remaining-=dt}
   const consumed=elapsed-remaining;if(consumed>0)world.scenery.update(consumed,Math.max(0,distance-before)/consumed);updateHud();
- }else if(mode==='menu'){time+=elapsed;world.update(elapsed,3,false)}
+ }else if(mode==='menu')time+=elapsed;
  else if(mode==='transition'){
   time+=elapsed;const result=finale.update(elapsed);
   if(result.swap){world.clear();view.arrival.begin(variant,p.x);for(const id of ['hud','progress','assembly','change'])$(id).hidden=true;arrivalHudHidden=true;}
