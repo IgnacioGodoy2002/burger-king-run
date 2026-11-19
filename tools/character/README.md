@@ -22,3 +22,9 @@ mitten hands. Rest-space proportions lengthen legs and shorten the torso with
 the skeleton. Red backpack color is packed in the actual asset. Running includes
 pelvis/shoulder counter-rotation, delayed knee flexion and wrist movement. Seven
 clips and collision clearance remain compatible; nine material surfaces, ~3.2 MB.
+
+Royal mascot update: `royal-mascot.py` dresses the original rig using the supplied
+King references: jeweled crown, chestnut beard and curls, crimson mantle, ivory
+ermine collar and gold boots. Run it after `build.py`, then bake-ground.mjs and
+validate.mjs. `burger-king-mascot.blend` is the editable royal costume; the original
+runner .blend remains the input. All seven animation clips are retained.

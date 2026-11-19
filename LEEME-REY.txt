@@ -1,0 +1,19 @@
+El personaje del Rey ya está incluido.
+
+Para aplicar el cambio a otra copia del mismo proyecto, hacé un respaldo y copiá:
+public/game/assets/models/burger-king-runner.glb
+public/game/js/runner.js
+public/game/js/character-ground.js
+
+Volvé a compilar y publicar tu proyecto. Recargá con Ctrl+F5.
+Si modificaste runner.js por tu cuenta, compará los cambios antes de reemplazarlo.
+
+Modelo editable: tools/character/burger-king-mascot.blend
+Script reproducible: tools/character/royal-mascot.py
+No necesitás Blender para usar el GLB incluido.
+
+Proyecto completo: requiere Node.js 22.13 o superior y pnpm.
+Instalá con corepack pnpm install y ejecutá corepack pnpm dev.
+Usá la dirección que indique la terminal.
+No incluye node_modules ni los datos de producción de la base D1.
+No se ejecuta abriendo index.html con doble clic.
